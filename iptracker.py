@@ -1,75 +1,76 @@
 import requests
 import os
 import sys
+from colorama import Fore, Style, init
+import pyfiglet
+
+init(autoreset=True)
 
 def banner():
     os.system("clear")
-    print("""
-====================================
-        EIZ IP TRACKER TOOL
-====================================
-1. Track IP
-2. Track My IP
-3. Exit
-""")
+    ascii_banner = pyfiglet.figlet_format("EIZ IP TRACKER")
+    print(Fore.CYAN + ascii_banner)
+    print(Fore.YELLOW + "1. Track IP")
+    print(Fore.YELLOW + "2. Track My IP")
+    print(Fore.YELLOW + "3. Exit\n")
 
 def fetch_ip_data(ip):
     try:
         url = f"https://ipapi.co/{ip}/json/"
         response = requests.get(url, timeout=10)
-        data = response.json()
-        return data
+        return response.json()
     except:
         return None
 
 def show_data(data):
     if not data or "error" in data:
-        print("\n[!] Failed to fetch IP data\n")
+        print(Fore.RED + "\n[!] Failed to fetch IP data\n")
         return
 
-    print("\n========== RESULT ==========\n")
+    print(Fore.GREEN + "\n========== RESULT ==========\n")
 
-    print(f"IP Address     : {data.get('ip')}")
-    print(f"City           : {data.get('city')}")
-    print(f"Region         : {data.get('region')}")
-    print(f"Country        : {data.get('country_name')}")
-    print(f"Postal Code    : {data.get('postal')}")
-    print(f"Latitude       : {data.get('latitude')}")
-    print(f"Longitude      : {data.get('longitude')}")
-    print(f"Timezone       : {data.get('timezone')}")
-    print(f"ISP / Org      : {data.get('org')}")
-    print(f"ASN            : {data.get('asn')}")
+    print(Fore.CYAN + "IP Address     : " + Fore.WHITE + str(data.get('ip')))
+    print(Fore.CYAN + "City           : " + Fore.WHITE + str(data.get('city')))
+    print(Fore.CYAN + "Region         : " + Fore.WHITE + str(data.get('region')))
+    print(Fore.CYAN + "Country        : " + Fore.WHITE + str(data.get('country_name')))
+    print(Fore.CYAN + "Postal Code    : " + Fore.WHITE + str(data.get('postal')))
+    print(Fore.CYAN + "Latitude       : " + Fore.WHITE + str(data.get('latitude')))
+    print(Fore.CYAN + "Longitude      : " + Fore.WHITE + str(data.get('longitude')))
+    print(Fore.CYAN + "Timezone       : " + Fore.WHITE + str(data.get('timezone')))
+    print(Fore.CYAN + "ISP / Org      : " + Fore.WHITE + str(data.get('org')))
+    print(Fore.CYAN + "ASN            : " + Fore.WHITE + str(data.get('asn')))
 
     lat = data.get("latitude")
     lon = data.get("longitude")
-    if lat and lon:
-        print("\nGoogle Maps:")
-        print(f"https://maps.google.com/?q={lat},{lon}")
 
-    print("\n=============================\n")
+    if lat and lon:
+        print(Fore.MAGENTA + "\nGoogle Maps:")
+        print(Fore.WHITE + f"https://maps.google.com/?q={lat},{lon}")
+
+    print(Fore.GREEN + "\n=============================\n")
 
 def main():
     while True:
         banner()
-        choice = input("Select option: ")
+        choice = input(Fore.YELLOW + "Select option: ")
 
         if choice == "1":
-            ip = input("\nEnter IP Address: ")
+            ip = input(Fore.CYAN + "\nEnter IP Address: ")
             data = fetch_ip_data(ip)
             show_data(data)
-            input("Press Enter to continue...")
+            input(Fore.YELLOW + "Press Enter to continue...")
 
         elif choice == "2":
             data = fetch_ip_data("")
             show_data(data)
-            input("Press Enter to continue...")
+            input(Fore.YELLOW + "Press Enter to continue...")
 
         elif choice == "3":
-            print("Goodbye!")
+            print(Fore.GREEN + "Goodbye!")
             sys.exit()
 
         else:
-            print("Invalid option")
+            print(Fore.RED + "Invalid option")
             input("Press Enter...")
 
 if __name__ == "__main__":
